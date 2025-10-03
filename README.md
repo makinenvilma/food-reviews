@@ -1,4 +1,4 @@
-# 📝 Blog Web App
+# Blog Web App
 
 A content management platform that allows users to create, edit, and delete blog posts.  
 The application includes both a public-facing blog and an admin panel for managing content.  
@@ -25,7 +25,7 @@ _Example view of the Wagtail CMS dashboard._
 - **Front-end:** HTML, CSS  
 - **Database:** (Configured in Django settings – e.g., SQLite/PostgreSQL)  
 
-## 🚀 Installation & Setup
+## Installation & Setup
 
 1. **Clone the repository**
    ```bash
@@ -73,3 +73,4 @@ _Example view of the Wagtail CMS dashboard._
 - **Django** handles both front-end rendering and back-end logic.  
 - **Wagtail** provides a robust admin interface for managing blog content.  
 - **HTML & CSS** deliver a clean and responsive layout.  
+
