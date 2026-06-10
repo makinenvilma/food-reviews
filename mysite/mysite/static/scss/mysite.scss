@@ -1,0 +1,601 @@
+// Ruoka-arvostelut -teema
+$brand-red: #DA291C;
+$brand-yellow: #FFC72C;
+$brand-dark: #292929;
+$brand-bg: #FFFBF2;
+$brand-card: #FFFFFF;
+$brand-muted: #6b6b6b;
+$brand-border: #EFE6CC;
+
+$radius: 12px;
+$shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+$max-width: 880px;
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background: $brand-bg;
+  color: $brand-dark;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+h1, h2, h3 {
+  color: $brand-dark;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-top: 0;
+}
+
+h1 {
+  font-size: 2.4rem;
+}
+
+h2 {
+  font-size: 1.6rem;
+}
+
+h3 {
+  font-size: 1.15rem;
+  color: $brand-red;
+  margin-bottom: 0.3rem;
+}
+
+a {
+  color: $brand-red;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+p {
+  margin: 0.5rem 0 1rem;
+}
+
+button {
+  background: $brand-yellow;
+  color: $brand-dark;
+  border: none;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+// Sivun runko
+.page-content {
+  max-width: $max-width;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+// Kielenvalitsin
+.lang-switch {
+  max-width: $max-width;
+  margin: 1rem auto 0;
+  padding: 0 1.25rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+
+  a, &__current {
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    text-decoration: none;
+  }
+
+  a {
+    background: transparent;
+    color: $brand-muted;
+    border: 1px solid $brand-border;
+
+    &:hover {
+      background: #F2F2F2;
+      color: $brand-dark;
+      border-color: #E5E5E5;
+      text-decoration: none;
+    }
+  }
+
+  &__current {
+    background: $brand-red;
+    color: #fff;
+    order: 99;
+  }
+}
+
+// Etusivu (BlogIndexPage)
+.template-blogindexpage {
+  h1 {
+    margin-top: 0.5rem;
+    font-family: "Fredoka", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    font-size: 3rem;
+    letter-spacing: -0.01em;
+    color: $brand-dark;
+  }
+
+  .intro {
+    background: $brand-card;
+    border: 1px solid $brand-border;
+    border-radius: $radius;
+    padding: 1.25rem 1.5rem;
+    box-shadow: $shadow;
+    margin-bottom: 2rem;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  h2 {
+    margin-top: 0;
+
+    a {
+      color: $brand-dark;
+
+      &:hover {
+        color: $brand-red;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+// Suodattimet etusivulla
+.review-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 1rem;
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.25rem;
+  background: $brand-card;
+  border: 1px solid $brand-border;
+  border-radius: $radius;
+  box-shadow: $shadow;
+}
+
+.filter-dropdown {
+  position: relative;
+  min-width: 200px;
+  flex: 1 1 200px;
+
+  summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.55rem 2.25rem 0.55rem 1rem;
+    border-radius: $radius;
+    border: 1px solid $brand-border;
+    background: #fff;
+    position: relative;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      right: 0.95rem;
+      top: 50%;
+      width: 0.5rem;
+      height: 0.5rem;
+      border-right: 2px solid $brand-dark;
+      border-bottom: 2px solid $brand-dark;
+      transform: translateY(-70%) rotate(45deg);
+      transition: transform 0.2s ease;
+    }
+
+    &:hover {
+      border-color: $brand-red;
+    }
+  }
+
+  &[open] summary {
+    border-color: $brand-red;
+    box-shadow: 0 0 0 3px rgba($brand-red, 0.12);
+
+    &::after {
+      transform: translateY(-25%) rotate(-135deg);
+    }
+  }
+
+  &__label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: $brand-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  &__value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: $brand-dark;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__list {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    right: 0;
+    z-index: 20;
+    list-style: none;
+    margin: 0;
+    padding: 0.4rem;
+    background: #fff;
+    border: 1px solid $brand-border;
+    border-radius: $radius;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+    max-height: 280px;
+    overflow-y: auto;
+
+    li {
+      margin: 0;
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.55rem 0.8rem;
+      border-radius: 8px;
+      color: $brand-dark;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: background 0.12s ease;
+
+      &::after {
+        content: "";
+        width: 1rem;
+        flex-shrink: 0;
+      }
+
+      &:hover {
+        background: #F2F2F2;
+      }
+
+      &.is-active {
+        font-weight: 700;
+        color: $brand-red;
+
+        &::after {
+          content: "\2713";
+          color: $brand-red;
+          font-weight: 700;
+        }
+      }
+    }
+  }
+}
+
+.review-filters__reset {
+  flex: 0 0 auto;
+  align-self: center;
+  padding: 0.55rem 0;
+  color: $brand-red;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Arvostelukortit (etusivu)
+.review-grid {
+  margin: 0 0 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+
+  &__empty {
+    grid-column: 1 / -1;
+    color: $brand-muted;
+    text-align: center;
+    padding: 2rem;
+  }
+}
+
+.review-card {
+  display: flex;
+  flex-direction: column;
+  background: $brand-card;
+  border: 1px solid $brand-border;
+  border-radius: $radius;
+  overflow: hidden;
+  box-shadow: $shadow;
+  color: $brand-dark;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    text-decoration: none;
+  }
+
+  &__image {
+    aspect-ratio: 4 / 3;
+    background: $brand-yellow;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 0;
+      display: block;
+    }
+  }
+
+  &__placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, $brand-yellow 0%, lighten($brand-yellow, 8%) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.3) 0, transparent 40%),
+        radial-gradient(circle at 70% 60%, rgba(218, 41, 28, 0.08) 0, transparent 50%);
+    }
+
+    span {
+      font-size: 5rem;
+      font-weight: 900;
+      color: $brand-red;
+      font-family: Georgia, serif;
+      line-height: 1;
+      z-index: 1;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  &__body {
+    padding: 1.1rem 1.25rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  &__name {
+    font-size: 1.15rem;
+    margin: 0;
+    color: $brand-dark;
+    line-height: 1.3;
+  }
+
+  &__location {
+    font-size: 0.85rem;
+    color: $brand-muted;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  &__stars {
+    font-size: 1.15rem;
+    letter-spacing: 0.1em;
+  }
+}
+
+// Tahdet (kortit + arvostelusivu) - Google/Amazon -tyyli
+.star {
+  color: #F5B400;
+  display: inline-block;
+
+  &--empty {
+    color: #D9D9D9;
+  }
+}
+
+// Arvostelun hero-kuva
+.review-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+  margin: 0 0 1.5rem;
+
+  &__item {
+    margin: 0;
+    border-radius: $radius;
+    overflow: hidden;
+    box-shadow: $shadow;
+    background: $brand-card;
+
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    figcaption {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.9rem;
+      color: $brand-muted;
+    }
+  }
+}
+
+.review-hero {
+  margin: 0 0 1.5rem;
+  border-radius: $radius;
+  overflow: hidden;
+  box-shadow: $shadow;
+  aspect-ratio: 2 / 1;
+  background: $brand-yellow;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 0;
+  }
+
+  &__placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, $brand-yellow 0%, lighten($brand-yellow, 8%) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.3) 0, transparent 40%),
+        radial-gradient(circle at 70% 60%, rgba(218, 41, 28, 0.08) 0, transparent 50%);
+    }
+
+    span {
+      font-size: 9rem;
+      font-weight: 900;
+      color: $brand-red;
+      font-family: Georgia, serif;
+      line-height: 1;
+      z-index: 1;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    }
+  }
+}
+
+// Postaussivu (BlogPage)
+.template-blogpage {
+  .back-link {
+    margin: 0 0 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+
+    a {
+      color: $brand-red;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+
+      &::before {
+        content: "\2190";
+        display: inline-block;
+        transition: transform 0.15s ease;
+      }
+
+      &:hover {
+        text-decoration: none;
+        color: darken($brand-red, 8%);
+
+        &::before {
+          transform: translateX(-3px);
+        }
+      }
+    }
+  }
+
+  h1 {
+    margin-top: 0.5rem;
+  }
+
+  .restaurant {
+    font-weight: 700;
+    color: $brand-red;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0.25rem 0 0;
+  }
+
+  .location {
+    color: $brand-muted;
+    font-size: 0.95rem;
+    margin: 0.25rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .stars {
+    font-size: 1.4rem;
+    letter-spacing: 0.1em;
+    margin: 0.25rem 0;
+  }
+
+  .meta {
+    color: $brand-muted;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: -0.25rem;
+  }
+
+  .tags {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid $brand-border;
+
+    a {
+      margin-right: 0.4rem;
+    }
+  }
+}
+
+// Tagi-sivu
+.template-blogtagindexpage {
+  h1 {
+    margin-top: 0;
+  }
+}
+
+// Yleinen artikkelisisalto (richtext)
+.intro + p,
+h3 + p,
+h3 ~ p {
+  margin-top: 0;
+}
+
+img {
+  max-width: 100%;
+  border-radius: $radius;
+}

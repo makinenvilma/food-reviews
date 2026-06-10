@@ -47,10 +47,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "sass_processor",
+    "wagtail_localize",
+    "wagtail_localize.locales",
 ]
 
 MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -116,7 +120,15 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "fi"
+
+LANGUAGES = [
+    ("fi", "Suomi"),
+    ("en", "English"),
+]
+
+WAGTAIL_CONTENT_LANGUAGES = LANGUAGES
+WAGTAIL_I18N_ENABLED = True
 
 TIME_ZONE = "UTC"
 
@@ -131,7 +143,12 @@ USE_TZ = True
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "sass_processor.finders.CssFinder",
 ]
+
+SASS_PROCESSOR_ROOT = os.path.join(PROJECT_DIR, "static")
+SASS_PROCESSOR_AUTO_INCLUDE = True
+SASS_OUTPUT_STYLE = "compressed"
 
 STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, "static"),

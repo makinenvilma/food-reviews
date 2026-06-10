@@ -1,2 +1,5 @@
 Django>=5.2,<5.3
 wagtail>=7.0,<7.1
+django-sass-processor>=1.4,<2.0
+libsass>=0.23,<0.24
+wagtail-localize>=1.13,<2.0

@@ -8,7 +8,39 @@
 {% block body_class %}template-blogpage{% endblock %}
 
 {% block content %}
+    <p class="back-link">
+        <a href="{{ page.get_parent.url }}">{% if page.locale.language_code == 'en' %}Back to home{% else %}Palaa etusivulle{% endif %}</a>
+    </p>
+
+    <div class="review-hero">
+        {% with page.main_image as main_image %}
+            {% if main_image %}
+                {% image main_image fill-880x440 %}
+            {% else %}
+                <div class="review-hero__placeholder"><span>M</span></div>
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    {% with extra_images=page.gallery_images.all|slice:"1:" %}
+        {% if extra_images %}
+            <div class="review-gallery">
+                {% for item in extra_images %}
+                    <figure class="review-gallery__item">
+                        {% image item.image fill-320x240 %}
+                        {% if item.caption %}<figcaption>{{ item.caption }}</figcaption>{% endif %}
+                    </figure>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
     <h1>{{ page.title }}</h1>
+    {% if page.restaurant_name %}<p class="restaurant">{{ page.restaurant_name }}</p>{% endif %}
+    {% if page.location %}<p class="location"><span aria-hidden="true">📍</span> {{ page.location }}</p>{% endif %}
+    <p class="stars" aria-label="{{ page.rating }} / 5">
+        {% for filled in page.stars %}<span class="star{% if not filled %} star--empty{% endif %}">★</span>{% endfor %}
+    </p>
     <p class="meta">{{ page.date }}</p>
 
     {% with authors=page.authors.all %}
@@ -25,18 +57,30 @@
         {% endif %}
     {% endwith %}
 
-    <div class="intro">{{ page.intro }}</div>
+    {% with is_en=page.locale.language_code|stringformat:"s" %}
+    <div class="review-facts">
+        {% if page.restaurant_name %}<p><b>{% if is_en == 'en' %}Restaurant:{% else %}Ravintola:{% endif %}</b> {{ page.restaurant_name }}{% if page.location %}, {{ page.location }}{% endif %}</p>{% endif %}
+        {% if page.product %}<p><b>{% if is_en == 'en' %}Product:{% else %}Tuote:{% endif %}</b> {{ page.product }}</p>{% endif %}
+        {% if page.price %}<p><b>{% if is_en == 'en' %}Price:{% else %}Hinta:{% endif %}</b> {{ page.price }}</p>{% endif %}
+    </div>
 
-    {{ page.body|richtext }}
-
-    {% for item in page.gallery_images.all %}
-        <div style="float: inline-start; margin: 10px">
-            {% image item.image fill-320x240 %}
-            <p>{{ item.caption }}</p>
-        </div>
-    {% endfor %}
-
-    <p><a href="{{ page.get_parent.url }}">Return to blog</a></p>
+    {% if page.taste %}
+        <h3>{% if is_en == 'en' %}Taste{% else %}Maku{% endif %}</h3>
+        {{ page.taste|richtext }}
+    {% endif %}
+    {% if page.sides %}
+        <h3>{% if is_en == 'en' %}Sides{% else %}Lisukkeet{% endif %}</h3>
+        {{ page.sides|richtext }}
+    {% endif %}
+    {% if page.service %}
+        <h3>{% if is_en == 'en' %}Service{% else %}Palvelu{% endif %}</h3>
+        {{ page.service|richtext }}
+    {% endif %}
+    {% if page.overall %}
+        <h3>{% if is_en == 'en' %}Overall: {{ page.rating }}/5{% else %}Yleisarvio: {{ page.rating }}/5{% endif %}</h3>
+        {{ page.overall|richtext }}
+    {% endif %}
+    {% endwith %}
 
     {% with tags=page.tags.all %}
         {% if tags %}

@@ -1,4 +1,4 @@
-{% load static wagtailcore_tags wagtailuserbar %}
+{% load static wagtailcore_tags wagtailuserbar sass_tags i18n locale_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -18,13 +18,17 @@
         {% endif %}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+
         {# Force all links in the live preview panel to be opened in a new tab #}
         {% if request.in_preview_panel %}
         <base target="_blank">
         {% endif %}
 
         {# Global stylesheets #}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/mysite.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% sass_src 'scss/mysite.scss' %}">
 
         {% block extra_css %}
         {# Override this in templates to add extra stylesheets #}
@@ -34,7 +38,20 @@
     <body class="{% block body_class %}{% endblock %}">
         {% wagtailuserbar %}
 
-        {% block content %}{% endblock %}
+        {% if page %}
+        <nav class="lang-switch" aria-label="Language">
+            {% for translation in page.get_translations.live %}
+                <a href="{% locale_pageurl translation %}" hreflang="{{ translation.locale.language_code }}">
+                    {{ translation.locale.language_code|upper }}
+                </a>
+            {% endfor %}
+            <span class="lang-switch__current">{{ page.locale.language_code|upper }}</span>
+        </nav>
+        {% endif %}
+
+        <main class="page-content">
+            {% block content %}{% endblock %}
+        </main>
 
         {# Global javascript #}
         <script type="text/javascript" src="{% static 'js/mysite.js' %}"></script>

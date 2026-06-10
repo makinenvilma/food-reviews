@@ -1,28 +1,84 @@
 {% extends "base.html" %}
 
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
 
 {% block body_class %}template-blogindexpage{% endblock %}
 
 {% block content %}
+    {% with is_en=page.locale.language_code|stringformat:"s" %}
     <h1>{{ page.title }}</h1>
 
     <div class="intro">{{ page.intro|richtext }}</div>
 
-<!-- Load wagtailimages_tags: -->
-{% load wagtailcore_tags wagtailimages_tags %}
+    <div class="review-filters">
+        <details class="filter-dropdown">
+            <summary>
+                <span class="filter-dropdown__label">{% if is_en == 'en' %}Location{% else %}Sijainti{% endif %}</span>
+                <span class="filter-dropdown__value">{% if selected_location %}{{ selected_location }}{% else %}{% if is_en == 'en' %}All{% else %}Kaikki{% endif %}{% endif %}</span>
+            </summary>
+            <ul class="filter-dropdown__list">
+                <li>
+                    <a class="{% if not selected_location %}is-active{% endif %}" href="?{% if selected_min_rating %}rating={{ selected_min_rating }}{% endif %}">{% if is_en == 'en' %}All{% else %}Kaikki{% endif %}</a>
+                </li>
+                {% for loc in available_locations %}
+                    <li>
+                        <a class="{% if loc == selected_location %}is-active{% endif %}" href="?location={{ loc|urlencode }}{% if selected_min_rating %}&amp;rating={{ selected_min_rating }}{% endif %}">{{ loc }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </details>
 
-{% for post in blogpages %}
-    {% with post=post.specific %}
-        <h2><a href="{% pageurl post %}">{{ post.title }}</a></h2>
+        <details class="filter-dropdown">
+            <summary>
+                <span class="filter-dropdown__label">{% if is_en == 'en' %}Stars{% else %}Tähdet{% endif %}</span>
+                <span class="filter-dropdown__value">{% if selected_min_rating %}{{ selected_min_rating }}{% else %}{% if is_en == 'en' %}All{% else %}Kaikki{% endif %}{% endif %}</span>
+            </summary>
+            <ul class="filter-dropdown__list">
+                <li>
+                    <a class="{% if not selected_min_rating %}is-active{% endif %}" href="?{% if selected_location %}location={{ selected_location|urlencode }}{% endif %}">{% if is_en == 'en' %}All{% else %}Kaikki{% endif %}</a>
+                </li>
+                {% for r in "12345" %}
+                    <li>
+                        <a class="{% if selected_min_rating == r %}is-active{% endif %}" href="?rating={{ r }}{% if selected_location %}&amp;location={{ selected_location|urlencode }}{% endif %}">{{ r }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </details>
 
-        {% with post.main_image as main_image %}
-            {% if main_image %}{% image main_image fill-160x100 %}{% endif %}
+        {% if selected_location or selected_min_rating %}
+            <a class="review-filters__reset" href="{% pageurl page %}">{% if is_en == 'en' %}Reset choices{% else %}Tyhjennä valinnat{% endif %}</a>
+        {% endif %}
+    </div>
+
+    <div class="review-grid">
+    {% for post in blogpages %}
+        {% with post=post.specific %}
+            <a class="review-card" href="{% pageurl post %}">
+                <div class="review-card__image">
+                    {% with post.main_image as main_image %}
+                        {% if main_image %}
+                            {% image main_image fill-400x260 %}
+                        {% else %}
+                            <div class="review-card__placeholder">
+                                <span>M</span>
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+                <div class="review-card__body">
+                    <h2 class="review-card__name">{{ post.restaurant_name|default:post.title }}</h2>
+                    {% if post.location %}
+                        <p class="review-card__location"><span aria-hidden="true">📍</span> {{ post.location }}</p>
+                    {% endif %}
+                    <div class="review-card__stars" aria-label="{{ post.rating }} / 5">
+                        {% for filled in post.stars %}<span class="star{% if not filled %} star--empty{% endif %}">★</span>{% endfor %}
+                    </div>
+                </div>
+            </a>
         {% endwith %}
-
-        <p>{{ post.intro }}</p>
-        {{ post.body|richtext }}
+    {% empty %}
+        <p class="review-grid__empty">{% if is_en == 'en' %}No reviews match the choices.{% else %}Ei valintoihin sopivia arvosteluja.{% endif %}</p>
+    {% endfor %}
+    </div>
     {% endwith %}
-{% endfor %}
-
 {% endblock %}
