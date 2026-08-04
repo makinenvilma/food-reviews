@@ -1,15 +1,13 @@
 # Food Reviews
 
-A place to keep restaurant reviews that would otherwise stay in the notes app on my
-phone and never be found again. Every review gives the place one to five stars and
-splits the write-up into taste, sides, service and an overall verdict, so two meals
-eaten a year apart are still comparable. Everything exists in both Finnish and
-English.
+A restaurant review site built with Django and Wagtail. Every review rates the place
+from one to five stars and splits the write-up into taste, sides, service and an
+overall verdict, which keeps reviews written months apart comparable. Content is
+written in the Wagtail admin and exists in both Finnish and English.
 
 ## Status
 
-Usable and has real content in it. Reviews are written in the Wagtail admin rather
-than in code.
+Working and in use, with real reviews in the database.
 
 Working right now:
 
@@ -23,13 +21,13 @@ Working right now:
 
 Not done yet:
 
-- SQLite only. Fine for one person, not for anything hosted.
+- SQLite only, which is fine locally but not for hosting.
 - No tests. `blog/tests.py` is still the file Django generated.
 - Interface texts are written straight into the templates as `{% if is_en %}` checks
-  instead of proper Django translations. It works, but it gets clumsy fast.
+  instead of proper Django translations, which does not scale to more strings.
 - No `.gitignore`, so the database and all uploaded images are committed to the repo.
-- `pyproject.toml` in the root is leftover Poetry boilerplate from something else and
-  has nothing to do with the site.
+- `pyproject.toml` in the root is leftover Poetry boilerplate and is unrelated to the
+  site.
 
 ## Tech
 
