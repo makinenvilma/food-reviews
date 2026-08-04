@@ -1,23 +1,46 @@
 # Food Reviews
 
-A multilingual (Finnish/English) restaurant review site built with Django and Wagtail. Reviews are shown as cards with star ratings, and content is managed through the Wagtail admin.
+A place to keep restaurant reviews that would otherwise stay in the notes app on my
+phone and never be found again. Every review gives the place one to five stars and
+splits the write-up into taste, sides, service and an overall verdict, so two meals
+eaten a year apart are still comparable. Everything exists in both Finnish and
+English.
 
-## Features
+## Status
 
-- Review cards on the front page (restaurant name, star rating 1-5, image)
-- Individual review pages with rich text, categories, and tags
-- Multilingual support (`wagtail-localize`) with a language switcher
-- SCSS theme (red/yellow palette, card layout)
+Usable and has real content in it. Reviews are written in the Wagtail admin rather
+than in code.
 
-## Tech stack
+Working right now:
 
-- Django 5.2 + Wagtail 7.0
-- SQLite (dev)
-- SCSS via django-sass-processor
-- wagtail-localize
-- Python 3.13+
+- Front page listing reviews as cards, with star rating and photo
+- Filtering the list by location and by minimum star rating
+- Review pages with separate taste, sides, service and overall sections
+- Photo galleries with captions
+- Tags, plus a tag index page for browsing by tag
+- Authors as reusable snippets
+- Finnish and English side by side, Finnish at the root and English under `/en/`
 
-## Installation
+Not done yet:
+
+- SQLite only. Fine for one person, not for anything hosted.
+- No tests. `blog/tests.py` is still the file Django generated.
+- Interface texts are written straight into the templates as `{% if is_en %}` checks
+  instead of proper Django translations. It works, but it gets clumsy fast.
+- No `.gitignore`, so the database and all uploaded images are committed to the repo.
+- `pyproject.toml` in the root is leftover Poetry boilerplate from something else and
+  has nothing to do with the site.
+
+## Tech
+
+Django 5.2 and Wagtail 7.0, with wagtail-localize handling the two languages. Styles
+are SCSS compiled by django-sass-processor, which recompiles automatically while the
+dev server runs. Python 3.13 or newer.
+
+The review model lives in `blog/models.py`. Star rendering is a `stars` property on
+the page, and the location and rating filters are handled in `BlogIndexPage.get_context`.
+
+## Running it
 
 ```bash
 cd mysite
@@ -25,28 +48,46 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 python manage.py migrate
-python manage.py createsuperuser
 python manage.py runserver
 ```
 
-Site: http://localhost:8000 - Admin: http://localhost:8000/admin
+Site at http://localhost:8000, admin at http://localhost:8000/admin.
 
-## Adding a review
-
-1. Admin -> Pages -> Ruoka-arvostelut
-2. Add child page -> Blog Page
-3. Fill in title, restaurant_name, rating, date, intro, body, optional gallery images
-4. Publish
-
-## Localization
-
-The default language (FI) is served without a URL prefix; English is served under `/en/`. To translate a page, open it in the admin, choose More -> Translate, pick the target language, edit, and publish.
-
-## Styles
-
-SCSS source lives in `mysite/static/scss/mysite.scss` and is compiled automatically in dev. For production:
+The database is committed to the repo, so the reviews are there from the start. You
+will need your own admin account to edit anything:
 
 ```bash
-python manage.py compilescss
-python manage.py collectstatic
+python manage.py createsuperuser
 ```
+
+## Layout of the code
+
+```
+mysite/
+  blog/
+    models.py           BlogPage, BlogIndexPage, tags, authors, gallery
+    templates/blog/     list, single review, tag index
+    templatetags/       locale_pageurl for the language switcher
+  home/                 front page
+  search/               search view
+  mysite/
+    settings/           base, dev, production
+    static/scss/        mysite.scss, the red and yellow theme
+  media/                uploaded images
+```
+
+## Writing a review
+
+In the admin, go to Pages, then Ruoka-arvostelut, and add a child page of type Blog
+Page. Fill in the restaurant, location, product and price, pick a star rating and a
+date, then write the taste, sides, service and overall sections. Add gallery images
+at the bottom. Publish.
+
+To make an English version, open the page and choose More, then Translate.
+
+## Next up
+
+1. Tests, starting with the filters on the index page
+2. Move interface texts into real translation files
+3. A `.gitignore` and the database out of version control
+4. PostgreSQL and somewhere to host it
